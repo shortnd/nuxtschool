@@ -17,7 +17,7 @@ export default {
   head: {
     title: process.env.npm_package_name || '',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     meta: [,
       { charset: 'utf-8' },
