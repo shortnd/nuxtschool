@@ -2,6 +2,7 @@
   "name": "nuxtschool",
   "version": "1.0.0",
   "private": true,
+  "description": "Nuxt static",
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
