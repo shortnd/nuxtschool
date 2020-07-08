@@ -4,6 +4,7 @@
     <h1 class="title">nuxtschool</h1>
     <div class="links">
       <nuxt-link
+        class="links-link"
         v-for="post in posts"
         :to="{ name: 'posts-id', params: { id: post.id } }"
         :key="post.id"
@@ -13,7 +14,16 @@
 </template>
 
 <script>
+import { mapMutations, mapActions } from "vuex";
 export default {
+  async asyncData({ $axios }) {
+    const data = await $axios.$get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    return {
+      posts: data
+    };
+  },
   head() {
     return {
       title: "Home page",
@@ -24,14 +34,17 @@ export default {
         { name: "twitter:card", content: "summary_large_image" }
       ]
     };
-  },
-  computed: {
-    posts() {
-      return this.$store.state.posts.all;
-    }
   }
 };
 </script>
 
 <style>
+.links-link {
+  display: block;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.links .links-link:last-of-type {
+  margin-bottom: 0;
+}
 </style>

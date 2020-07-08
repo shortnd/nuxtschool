@@ -1,22 +1,41 @@
 <template>
   <div class="container">
     <article>
-      <h1 class="title">{{post.title}}</h1>
-      <p>{{post.content}}</p>
+      <h1 class="title">{{ post.title }}</h1>
+      <p>{{ post.body }}</p>
     </article>
     <aside>
       <ul>
         <li v-for="related in relatedPosts" :key="related.title">
-          <nuxt-link :to="{ name: 'posts-id', params: { id: related.id } }">{{ related.title }}</nuxt-link>
+          <nuxt-link :to="{ name: 'posts-id', params: { id: related.id } }">
+            {{
+            related.title
+            }}
+          </nuxt-link>
         </li>
       </ul>
     </aside>
   </div>
 </template>
 
-
 <script>
 export default {
+  async asyncData({ $axios, params }) {
+    const postPromise = $axios.$get(
+      "https://jsonplaceholder.typicode.com/posts/" + params.id
+    );
+    const relatedPostsPromise = $axios.get(
+      "https://jsonplaceholder.typicode.com/posts/"
+    );
+    const [post, relatedPosts] = await Promise.all([
+      postPromise,
+      relatedPostsPromise
+    ]);
+    return {
+      post,
+      relatedPosts: relatedPosts.data
+    };
+  },
   head() {
     return {
       title: this.post.title,
@@ -27,19 +46,6 @@ export default {
         { name: "twitter:card", content: "summary_large_image" }
       ]
     };
-  },
-  data() {
-    return {
-      id: this.$route.params.id
-    };
-  },
-  computed: {
-    post() {
-      return this.$store.state.posts.all.find(post => post.id === this.id);
-    },
-    relatedPosts() {
-      return this.$store.state.posts.all.filter(post => post.id !== this.id);
-    }
   }
 };
 </script>
